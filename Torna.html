@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <head>
+      <title>Rock Paper Scissors Water Tournament</title>
+      <link rel="icon" href="i.png" type="image/png">
+      <!-- Remaining head content -->
+    </head>
+    <title>Rock Paper Scissors Water Tournament</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        background-color: #264653;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        flex-direction: column;
+      }
+      
+      h1 {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 3rem;
+        color: #2a9d8f;
+        text-align: center;
+        text-shadow: 2px 2px 0 #e9c46a;
+        margin-bottom: 2rem;
+      }
+
+      .button-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 0.1rem;
+      }
+      
+      button {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1.5rem;
+        color: #e9c46a;
+        background-color: #2a9d8f;
+        border: none;
+        padding: 1rem 2rem;
+        margin: 1rem;
+        border-radius: 5px;
+        box-shadow: 2px 2px 0 #f4a261;
+        cursor: pointer;
+      }
+      
+      button:hover {
+        background-color: #f4a261;
+      }
+      
+      .score {
+        font-family: 'Arial', sans-serif;
+        font-size: 2rem;
+        color: #2a9d8f;
+        text-align: center;
+        text-shadow: 2px 2px 0 #e9c46a;
+        margin-top:0.00000000001rem;
+      }
+
+      #result {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 2rem;
+        color: #e9c46a;
+        text-align: center;
+        text-shadow: 2px 2px 0 #2a9d8f;
+        margin-top: 0.1rem;
+      }
+
+      select {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1.5rem;
+        color: #e9c46a;
+        background-color: #2a9d8f;
+        border: none;
+        padding: 1rem 2rem;
+        margin: 1rem;
+        border-radius: 5px;
+        box-shadow: 2px 2px 0 #f4a261;
+        cursor: pointer;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+        .prompt {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 1.5rem;
+      color: #2a9d8f;
+      text-align: center;
+      text-shadow: 2px 2px 0 #e9c46a;
+      margin-top: 1rem;
+    }
+
+        #copyright {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: black;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      z-index: 100;
+    }
+
+      #tournament-rules-button {
+    position: fixed;
+    bottom: 675px;
+    right: 653px;
+    z-index: 9999; 
+    font-size: 10px;/* Ensures the button is on top of other elements */
+  }
+
+
+    </style>
+  </head>
+
+
+
+  <body>
+
+    <div id="copyright">
+      2023 © Copyright: by Faisal Ayyad
+    </div>
+    <h1>Rock Paper Scissors Water Tournament</h1>
+    <div class="button-container">
+      <button onclick="alert('Rock beats scissors and water, but loses to paper. \n\nPaper beats rock, but loses to scissors. \n\nScissors beats paper and water, but loses to rock. \n\nWater beats paper and rock, but loses to scissors and itself. \n\nChoose your move wisely!')">Rules</button>
+      <a href="index.html"><button>Back to Game</button></a>
+    </div>
+
+    <p class="prompt">Select your difficulty:</p>
+    <select id="difficulty">
+      <option value="very-easy">Very Easy</option>
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+      <option value="very-hard">Very Hard</option>
+    </select>
+
+    <p id="player-score" class="score">👤 Player Score: 0</p>
+    <p id="ai-score" class="score">🤖 AI Score: 0</p>
+    <div class="button-container">
+      <button onclick="play('rock')">Rock</button>
+      <button onclick="play('paper')">Paper</button>
+      <button onclick="play('scissors')">Scissors</button>
+      <button onclick="play('water')">Water</button>
+    </div>
+    <p id="result"></p>
+
+    <button id="tournament-rules-button" onclick="alert('This is the Tournament mode. The first person to reach 10 points wins. When 10 points are reached by the player or AI, the score will reset to 0 for both the Player and AI to start the next round.')">Tournament Rules</button>
+
+    <script>
+      let playerScore = 0;
+      let aiScore = 0;
+
+      function getAIChoice(difficulty, playerChoice) {
+        const choices = ['rock', 'paper', 'scissors', 'water'];
+        const winConditions = {
+          'rock': ['scissors', 'water'],
+          'paper': ['rock', 'water'],
+          'scissors': ['paper', 'water'],
+          'water': ['rock', 'paper']
+        };
+
+        const loseConditions = {
+          'rock': ['paper'],
+          'paper': ['scissors'],
+          'scissors': ['rock'],
+          'water': ['scissors']
+        };
+
+        let aiChoice;
+        const randomIndex = Math.floor(Math.random() * choices.length);
+
+        switch (difficulty) {
+          case 'very-easy':
+            if (Math.random() < 0.95) {
+              aiChoice = winConditions[playerChoice][0];
+            } else {
+              aiChoice = loseConditions[playerChoice][0];
+            }
+            break;
+          case 'easy':
+            if (Math.random() < 0.75) {
+              aiChoice = winConditions[playerChoice][0];
+            } else {
+              aiChoice = loseConditions[playerChoice][0];
+            }
+            break;
+          case 'medium':
+            aiChoice = choices[randomIndex];
+            break;
+          case 'hard':
+            if (Math.random() < 0.75) {
+              aiChoice = loseConditions[playerChoice][0];
+            } else {
+              aiChoice = winConditions[playerChoice][0];
+            }
+            break;
+            case 'very-hard':
+            if (Math.random() < 0.95) {
+              aiChoice = loseConditions[playerChoice][0];
+            } else {
+              aiChoice = winConditions[playerChoice][0];
+            }
+            break;
+        }
+
+        return aiChoice;
+      }
+
+      function play(playerChoice) {
+        const difficulty = document.getElementById('difficulty').value;
+        const aiChoice = getAIChoice(difficulty, playerChoice);
+
+        let result = "The AI chose " + aiChoice + ". ";
+
+        if (playerChoice === aiChoice) {
+          result += "It's a tie!";
+        } else if (
+          (playerChoice === 'rock' && (aiChoice === 'scissors' || aiChoice === 'water')) ||
+          (playerChoice === 'paper' && (aiChoice === 'rock' || aiChoice === 'water')) ||
+          (playerChoice === 'scissors' && (aiChoice === 'paper' || aiChoice === 'water')) ||
+          (playerChoice === 'water' && (aiChoice === 'rock' || aiChoice === 'paper'))
+        ) {
+          result += "You win!";
+          playerScore++;
+          if (playerScore === 10) {
+            result += " Congratulations! You won the tournament!";
+            document.body.style.backgroundImage = 'url(c.png)';
+            setTimeout(function() { document.body.style.backgroundImage = ''; }, 4000);
+
+            // Here you could trigger the confetti animation.
+            // For instance:
+            // document.body.style.backgroundImage = 'url(c.png)';
+            // setTimeout(function() { document.body.style.backgroundImage = ''; }, 4000);
+            playerScore = 0;  // Reset the player score.
+            aiScore = 0;  // Reset the AI score.
+          }
+        } else {
+          result += "You lose!";
+          aiScore++;
+          if (aiScore === 10) {
+            result += " The AI won the tournament!";
+            let count = 0;
+            let intervalId = setInterval(function() {
+              if (count >= 6) {
+                clearInterval(intervalId);
+              } else {
+                document.body.style.backgroundColor = count % 2 === 0 ? 'red' : '#264653';
+                count++;
+              }
+            }, 500);
+
+            // Here you could trigger the loser animation.
+            // For instance:
+            // document.body.style.backgroundImage = 'url(l.png)';
+            // setTimeout(function() { document.body.style.backgroundImage = ''; }, 4000);
+            playerScore = 0;  // Reset the player score.
+            aiScore = 0;  // Reset the AI score.
+          }
+        }
+
+        document.getElementById('result').innerHTML = result;
+        document.getElementById('player-score').innerHTML = "👤 Player Score: " + playerScore;
+        document.getElementById('ai-score').innerHTML = "🤖 AI Score: " + aiScore;
+      }
+    </script>
+  </body>
+</html>
+

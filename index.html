@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <head>
+      <title>Rock Paper Scissors Water Tournament</title>
+      <link rel="icon" href="i.png" type="image/png">
+      <!-- Remaining head content -->
+    </head>
+    
+    <title>Rock Paper Scissors Water Game</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        background-color: #264653;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        flex-direction: column;
+      }
+      
+      h1 {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 3rem;
+        color: #2a9d8f;
+        text-align: center;
+        text-shadow: 2px 2px 0 #e9c46a;
+        margin-bottom: 2rem;
+      }
+      
+      button {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1.5rem;
+        color: #e9c46a;
+        background-color: #2a9d8f;
+        border: none;
+        padding: 1rem 2rem;
+        margin: 1rem;
+        border-radius: 5px;
+        box-shadow: 2px 2px 0 #f4a261;
+        cursor: pointer;
+      }
+      
+      button:hover {
+        background-color: #f4a261;
+      }
+      
+      #result {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 2rem;
+        color: #e9c46a;
+        text-align: center;
+        text-shadow: 2px 2px 0 #2a9d8f;
+        margin-top: 0.1rem;
+      }
+
+      select {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1.5rem;
+        color: #e9c46a;
+        background-color: #2a9d8f;
+        border: none;
+        padding: 1rem 2rem;
+        margin: 1rem;
+        border-radius: 5px;
+        box-shadow: 2px 2px 0 #f4a261;
+        cursor: pointer;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+        .prompt {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.5rem;
+    color: #2a9d8f;
+    text-align: center;
+    text-shadow: 2px 2px 0 #e9c46a;
+    margin-top: 1rem;
+  }
+
+  #copyright {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: black;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  z-index: 100;
+}
+
+        .score-board {
+        position: fixed;
+        font-size: 3rem;
+        color: #e9c46a;
+        left: 7%;
+        top: 42%; /* changed from 30% to 50% */
+        border: 3px solid #e9c46a;
+        padding: 20px;
+        border-radius: 0px; /* changed from 10px to 0px to make box rectangular */
+        text-align: center;
+        width: 270px;
+        height: auto;
+      }
+      #reset {
+        position: fixed;
+        left: 10%;
+        top: 56%; /* changed from 60% to 70% */
+        font-size: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="copyright">
+      2023 © Copyright: by Faisal Ayyad
+    </div>
+    <button id="reset">Reset Score</button>
+    <div class="score-board" id="score-board">
+      👤 0 - 0 🤖
+    </div>
+    <button id="reset" onclick="resetScore()">Reset Score</button>
+
+    
+    <h1>Rock Paper Scissors Water Game</h1>
+    <button onclick="alert('Rock beats scissors and water, but loses to paper. \n\nPaper beats rock, but loses to scissors. \n\nScissors beats paper and water, but loses to rock. \n\nWater beats paper and rock, but loses to scissors and itself. \n\nChoose your move wisely!')">Rules</button>
+
+    <a href="Torna.html">
+      <button>Play Tournament</button>
+    </a>
+
+    <p class="prompt">Select your difficulty:</p>
+    <select id="difficulty">
+      <option value="very-easy">Very Easy</option>
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+      <option value="very-hard">Very Hard</option>
+    </select>
+
+    <p class="prompt">Select your move:</p>
+    <div>
+      <button onclick="play('rock')">Rock</button>
+      <button onclick="play('paper')">Paper</button>
+      <button onclick="play('scissors')">Scissors</button>
+      <button onclick="play('water')">Water</button>
+    </div>
+    <p id="result"></p>
+
+
+
+    <script>
+      let playerScore = 0;
+      let aiScore = 0;
+      document.getElementById('score-board').innerHTML = "👤 " + playerScore + " - " + aiScore + " 🤖";
+
+      document.getElementById('reset').addEventListener('click', function() {
+        playerScore = 0;
+        aiScore = 0;
+        document.getElementById('score-board').innerHTML = "👤 " + playerScore + " - " + aiScore + " 🤖";
+      });
+
+      function getAIChoice(difficulty, playerChoice) {
+        const choices = ['rock', 'paper', 'scissors', 'water'];
+        const winConditions = {
+          'rock': ['scissors', 'water'],
+          'paper': ['rock', 'water'],
+          'scissors': ['paper', 'water'],
+          'water': ['rock', 'paper']
+        };
+
+        const loseConditions = {
+          'rock': ['paper'],
+          'paper': ['scissors'],
+          'scissors': ['rock'],
+          'water': ['scissors']
+        };
+
+        let aiChoice;
+        const randomIndex = Math.floor(Math.random() * choices.length);
+
+        switch (difficulty) {
+          case 'very-easy':
+            if (Math.random() < 0.95) {
+              aiChoice = winConditions[playerChoice][0];
+            } else {
+              aiChoice = loseConditions[playerChoice][0];
+            }
+            break;
+          case 'easy':
+            if (Math.random() < 0.75) {
+              aiChoice = winConditions[playerChoice][0];
+            } else {
+              aiChoice = loseConditions[playerChoice][0];
+            }
+            break;
+          case 'medium':
+            aiChoice = choices[randomIndex];
+            break;
+          case 'hard':
+            if (Math.random() < 0.75) {
+              aiChoice = loseConditions[playerChoice][0];
+            } else {
+              aiChoice = winConditions[playerChoice][0];
+            }
+            break;
+          case 'very-hard':
+            if (Math.random() < 0.95) {
+              aiChoice = loseConditions[playerChoice][0];
+            } else {
+              aiChoice = winConditions[playerChoice][0];
+            }
+            break;
+        }
+
+        return aiChoice;
+      }
+
+      function play(playerChoice) {
+        const difficulty = document.getElementById('difficulty').value;
+        const aiChoice = getAIChoice(difficulty, playerChoice);
+        let result = 'You chose ' + playerChoice + '. AI chose ' + aiChoice + '. ';
+
+        if (playerChoice === aiChoice) {
+          result += "It's a tie!";
+        } else if (
+          (playerChoice === 'rock' && (aiChoice === 'scissors' || aiChoice === 'water')) ||
+          (playerChoice === 'paper' && (aiChoice === 'rock' || aiChoice === 'water')) ||
+          (playerChoice === 'scissors' && (aiChoice === 'paper' || aiChoice === 'water')) ||
+          (playerChoice === 'water' && (aiChoice === 'rock' || aiChoice === 'paper'))
+        ) {
+          result += "You win!";
+          playerScore += 1;
+        } else {
+          result += "You lose!";
+          aiScore += 1;
+        }
+
+        document.getElementById('result').innerHTML = result;
+        document.getElementById('score-board').innerHTML = "👤 " + playerScore + " - " + aiScore + " 🤖";
+      }
+
+
+      function resetScore() {
+        playerScore = 0;
+        aiScore = 0;
+        document.getElementById('score-board').textContent = `👤 ${playerScore} - ${aiScore} 🤖`;
+        document.getElementById('result').textContent = '';
+      }
+    </script>
+  </body>
+</html>
